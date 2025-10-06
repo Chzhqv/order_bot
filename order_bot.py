@@ -20,7 +20,7 @@ if not BOT_TOKEN or not ADMIN_CHAT_ID:
 # Define your menu items
 MENU_ITEMS = {
     "Vodka": {"name": "Absolut Vodka (750 ml)", "price": 60.00},
-    "Jagermeister" : {"name": "Jagermeister (750 ml)", "price": 0.0},
+    "Jagermeister" : {"name": "Jagermeister (750 ml)", "price": 60.0},
     "Stella Artois": {"name": "Stella Artois (6 x 473 ml)", "price": 40.00}
 }
 
