@@ -19,10 +19,9 @@ if not BOT_TOKEN or not ADMIN_CHAT_ID:
 
 # Define your menu items
 MENU_ITEMS = {
-    "vodka - absolute": {"name": "Vodka", "price": 80.00},
-    "jagermaister": {"name": "Jagermaister", "price": 80.50},
-    "vvvisky": {"name": "VVVisky", "price": 80.00},
-    "soda": {"name": "Soda Pop 🥤", "price": 3000.00},
+    "Vodka": {"name": "Absolut Vodka (750 ml)", "price": 60.00},
+    "Jagermeister" : {"name": "Jagermeister (750 ml)", "price": 0.0},
+    "Stella Artois": {"name": "Stella Artois (6 x 473 ml)", "price": 40.00}
 }
 
 # --- FSM States ---
@@ -42,7 +41,7 @@ async def send_welcome(message: types.Message, state: FSMContext):
     """
     Handler for /start and /help commands. Starts the order process.
     """
-    await message.reply("Hello! Welcome to our ordering service. What's your delivery address?")
+    await message.reply("Welcome! What's your delivery address?")
     # v3: Setting state is now done with state.set_state()
     await state.set_state(OrderForm.waiting_for_address)
 
@@ -88,7 +87,7 @@ async def process_item_selection(callback_query: types.CallbackQuery, state: FSM
     await state.update_data(item_name=selected_item['name'], item_price=selected_item['price'])
 
     await callback_query.message.edit_text(f"You've selected: {selected_item['name']}.") # Remove keyboard and update text
-    await callback_query.message.answer("What is your Canadian phone number (e.g., 123-456-7890)?")
+    await callback_query.message.answer("What is your Canadian phone number (e.g., 999-555-3311)?")
     await state.set_state(OrderForm.waiting_for_phone_number)
     await callback_query.answer() # Acknowledge the callback
 
@@ -99,7 +98,7 @@ async def process_phone_number(message: types.Message, state: FSMContext, bot: B
     """
     phone_number_pattern = r"^(?:\+1|1)?[\s.-]?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$"
     if not message.text or not re.match(phone_number_pattern, message.text):
-        await message.reply("That doesn't look like a valid Canadian phone number. Please try again.")
+        await message.reply("That doesn't look like a valid (+1) phone number. Please try again.")
         return
 
     await state.update_data(phone_number=message.text)
@@ -124,7 +123,7 @@ Please contact the customer to confirm the order.
         await message.reply("Thank you! Your order has been placed. We will contact you shortly to confirm.")
     except Exception as e:
         logging.error(f"Error sending order to admin: {e}")
-        await message.reply("Sorry, there was an issue placing your order. Please try again later.")
+        await message.reply("Sorry, there was an issue placing your order. Please try again later, OR DM @problemhandler.")
 
     # v3: Finishing a state is done with state.clear()
     await state.clear()
